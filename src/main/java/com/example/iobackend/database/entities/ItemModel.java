@@ -23,7 +23,10 @@ public class ItemModel {
     private Long id;
 
     private String name;
+    private String url;
     private BigDecimal price;
+    private BigDecimal shippingPrice;
+    private Long shippingDays;
     private String currency;
-    private String service;
+    private String shop;
 }
