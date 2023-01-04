@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<UserModel, Long> {
     Optional<UserModel> findFirstByUsername(String username);
+    boolean existsByUsername(String username);
 }
