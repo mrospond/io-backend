@@ -2,17 +2,29 @@ package com.example.iobackend.service.web;
 
 import com.example.iobackend.dto.ItemScrapingResult;
 import com.example.iobackend.jsoup.JsoupConnector;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
+@PropertySource("classpath:ceneo.properties")
 public class CeneoItemWebScrapingService implements ItemWebScrapingService {
-    private static final String URL_ROOT = "https://www.ceneo.pl/Zdrowie";
-    private static final String URL_QUERY = ";szukaj-";
     private final JsoupConnector jsoupConnector;
+
+    @Value("${search.url}")
+    private String urlRoot;
+    @Value("${query.delimiter}")
+    private String delimiter;
+    @Value("${div.prod.row.class}")
+    private String rowClass;
+    @Value("${div.prod.row.foto.class}")
+    private String fotoClass;
+    @Value("${div.prod.row.content.class}")
+    private String contentClass;
 
     @Override
     public List<ItemScrapingResult> findItemsByName(String name) {

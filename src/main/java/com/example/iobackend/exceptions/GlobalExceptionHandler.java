@@ -5,13 +5,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -20,28 +20,32 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    private static final String TIMESTAMP = "timestamp";
+    private static final String MESSAGE = "message";
+    private static final String STATUS = "status";
+    private static final String ERRORS = "errors";
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<Object> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException exception) {
         Map<String, Object> map = new HashMap<>();
-        map.put("timestamp", LocalDateTime.now());
-        map.put("message", exception.getMessage());
+        map.put(TIMESTAMP, LocalDateTime.now());
+        map.put(MESSAGE, exception.getMessage());
         return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException exception) {
         Map<String, Object> map = new HashMap<>();
-        map.put("timestamp", LocalDateTime.now());
-        map.put("message", exception.getMessage());
+        map.put(TIMESTAMP, LocalDateTime.now());
+        map.put(MESSAGE, exception.getMessage());
         return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException exception) {
         Map<String, Object> map = new HashMap<>();
-        map.put("timestamp", LocalDateTime.now());
-        map.put("message", "Bad credentials!");
+        map.put(TIMESTAMP, LocalDateTime.now());
+        map.put(MESSAGE, exception.getMessage());
         return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
     }
 
@@ -51,8 +55,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status, WebRequest request) {
 
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDate.now());
-        body.put("status", status.value());
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(STATUS, status.value());
 
         List<String> errors = ex.getBindingResult()
                 .getAllErrors()
@@ -60,8 +64,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
 
-        body.put("errors", errors);
+        body.put(ERRORS, errors);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationFailure(AuthenticationException exception) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(TIMESTAMP, LocalDateTime.now());
+        map.put(MESSAGE, "Failed to log in");
+        return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
     }
 }
