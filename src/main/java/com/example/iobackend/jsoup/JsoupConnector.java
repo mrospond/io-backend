@@ -1,5 +1,6 @@
 package com.example.iobackend.jsoup;
 
+import com.example.iobackend.exceptions.JsoupConnectionException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
@@ -10,10 +11,14 @@ import java.io.IOException;
 public class JsoupConnector {
     private static final int DEFAULT_TIMEOUT = 3000;
 
-    public Document getDocument(String url) throws IOException {
-        return Jsoup.connect(url)
-                .timeout(DEFAULT_TIMEOUT)
-                .url(url)
-                .get();
+    public Document getDocument(String url) {
+        try {
+            return Jsoup.connect(url)
+                    .timeout(DEFAULT_TIMEOUT)
+                    .url(url)
+                    .get();
+        } catch (IOException e) {
+            throw new JsoupConnectionException(e);
+        }
     }
 }

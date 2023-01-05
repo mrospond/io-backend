@@ -85,4 +85,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("{}: ", exception.getClass().getSimpleName(), exception);
         return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(JsoupConnectionException.class)
+    public ResponseEntity<Object> handleJsoupConnectionException(JsoupConnectionException exception) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(TIMESTAMP, LocalDateTime.now());
+        map.put(MESSAGE, "Jsoup connection error occurred");
+
+        log.error("{}: ", exception.getClass().getSimpleName(), exception);
+        return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+    }
 }
