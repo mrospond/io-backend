@@ -1,5 +1,6 @@
 package com.example.iobackend.exceptions;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String TIMESTAMP = "timestamp";
     private static final String MESSAGE = "message";
@@ -30,6 +32,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, Object> map = new HashMap<>();
         map.put(TIMESTAMP, LocalDateTime.now());
         map.put(MESSAGE, exception.getMessage());
+
+        log.error("{}: ", exception.getClass().getSimpleName(), exception);
         return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
     }
 
@@ -38,6 +42,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, Object> map = new HashMap<>();
         map.put(TIMESTAMP, LocalDateTime.now());
         map.put(MESSAGE, exception.getMessage());
+        log.error("{}: ", exception.getClass().getSimpleName(), exception);
         return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
     }
 
@@ -46,19 +51,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, Object> map = new HashMap<>();
         map.put(TIMESTAMP, LocalDateTime.now());
         map.put(MESSAGE, exception.getMessage());
+        log.error("{}: ", exception.getClass().getSimpleName(), exception);
         return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex, HttpHeaders headers,
+            MethodArgumentNotValidException exception, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put(TIMESTAMP, LocalDateTime.now());
         body.put(STATUS, status.value());
 
-        List<String> errors = ex.getBindingResult()
+        List<String> errors = exception.getBindingResult()
                 .getAllErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
@@ -66,6 +72,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         body.put(ERRORS, errors);
 
+        log.error("{}: ", exception.getClass().getSimpleName(), exception);
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
@@ -74,6 +81,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, Object> map = new HashMap<>();
         map.put(TIMESTAMP, LocalDateTime.now());
         map.put(MESSAGE, "Failed to log in");
+
+        log.error("{}: ", exception.getClass().getSimpleName(), exception);
         return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
     }
 }
