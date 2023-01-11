@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class ItemSearchService {
         return result;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public List<ItemResultDto> getSearchHistory(Authentication authentication) {
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return Collections.emptyList();
@@ -48,7 +49,7 @@ public class ItemSearchService {
                 .toList();
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     protected void addItemsToHistory(List<ItemScrapingResult> items, Authentication authentication) {
         if (!(authentication == null || authentication instanceof AnonymousAuthenticationToken)) {
             String username = ((User) authentication.getPrincipal()).getUsername();
