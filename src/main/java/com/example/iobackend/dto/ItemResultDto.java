@@ -3,6 +3,7 @@ package com.example.iobackend.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -10,6 +11,6 @@ import java.time.LocalDateTime;
 public class ItemResultDto {
     private String name;
     private String url;
-    private String price;
+    private BigDecimal price;
     private LocalDateTime timestamp;
 }
