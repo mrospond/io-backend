@@ -62,6 +62,8 @@ Na razie zostawiam wyłączone.
   - pola `username` oraz `password` nie są puste
   - pole `username` zawiera wyłącznie litery oraz cyfry
   - pole `username` zawiera od 4 do 20 znaków
+  - użytkownik istnieje w bazie
+  - hasło i login są prawidłowe
   
 - `/search` <br>
   <i>Metoda HTTP: POST <br>
