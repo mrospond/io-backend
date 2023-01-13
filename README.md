@@ -1,6 +1,21 @@
 # io-backend
 
-WAŻNE: Po wysłaniu pierwszego requesta do endpointów wymagających logowania (`/user/register`, `/user/login`, `/search/history`, `/search/history/export`) dostaniemy w odpowiedzi status 403:Forbidden wraz z ciasteczkiem `XRSF-TOKEN`. Na etapie integracji z frontendem trzeba będzie napisać logikę (we frontendzie), która pobierze wartość tego ciasteczka i dołączy do każdego kolejnego requesta w sesji <i><b>nagłówek</i></b> o nazwie `X-XSRF-TOKEN` i pobranej wartości. To taka forma zabezpieczenia przed CSRF. 
+## Setup
+
+1. W Intellij IDEA utwórz nowy projekt: `File -> New -> Project from Version Control`. 
+2. Wybierz lokalizację projektu.
+3. Skopiuj URL tego repozytorium i umieść w oknie, które się pojawiło. 
+4. `Clone`
+
+Żeby uruchomić aplikację należy przejść do klasy `IoBackendApplication.java` i wywołać metodę main(). Po kilku sekundach aplikacja powinna być dostępna pod adresem `localhost:8080`.
+
+## Struktura bazy danych
+
+Na razie są 2 tabele: `item_search_history` zawierająca wszystkie wyszukane przedmioty oraz `users` zawierająca hashe haseł (w BCrypt) i nazwy użytkowników.
+
+## CSRF
+
+Po wysłaniu pierwszego requesta do endpointów wymagających logowania (`/user/register`, `/user/login`, `/search/history`, `/search/history/export`) dostaniemy w odpowiedzi status 403:Forbidden wraz z ciasteczkiem `XRSF-TOKEN`. Na etapie integracji z frontendem trzeba będzie napisać logikę (we frontendzie), która pobierze wartość tego ciasteczka i dołączy do każdego kolejnego requesta w sesji <i><b>nagłówek</i></b> o nazwie `X-XSRF-TOKEN` i pobranej wartości. To taka forma zabezpieczenia przed CSRF. 
 
 Podczas lokalnego testowania można jednak wyłączyć tę funkcję za pomocą odkomentowania/zakomentowania odpowiednich linijek:
 
@@ -116,3 +131,10 @@ Na razie zostawiam wyłączone.
   
   Przykład: `localhost:8080/search/history/export?extension=csv`<br>
   Odpowiedź: plik csv zawierający historię wyszukiwania<br>
+  
+- `/h2` <br>
+  <i>Login: niewymagany do aplikacji, wymagany do bazy danych <br>
+  Login do bazy: sa <br>
+  Hasło: brak <br></i>
+  
+  Konsola wbudowanej bazy danych H2 dostępna z poziomu przeglądarki. Do celów testowych
