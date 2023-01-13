@@ -11,7 +11,7 @@
 
 ## Struktura bazy danych
 
-Na razie są 2 tabele: `item_search_history` zawierająca wszystkie wyszukane przedmioty oraz `users` zawierająca hashe haseł (w BCrypt) i nazwy użytkowników.
+Na razie są 2 tabele: `item_search_history` zawierająca wszystkie wyszukane przedmioty oraz `users` zawierająca hashe haseł (w BCrypt) i nazwy użytkowników. W bazie znajduje się 3 testowych użytkowników: user, user2 i user3. Wszyscy mają to samo hasło: 12345.
 
 ## CSRF
 
