@@ -132,6 +132,8 @@ Na razie zostawiam wyłączone.
   Przykład: `localhost:8080/search/history/export?extension=csv`<br>
   Odpowiedź: plik csv zawierający historię wyszukiwania<br>
   
+  Można wykonać requesta w przeglądarce po uprzednim zalogowaniu, wtedy automatycznie pobierze się plik.
+  
 - `/h2` <br>
   <i>Login: niewymagany do aplikacji, wymagany do bazy danych <br>
   Login do bazy: sa <br>
