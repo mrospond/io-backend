@@ -29,11 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<Object> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException exception) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(TIMESTAMP, LocalDateTime.now());
-        map.put(MESSAGE, exception.getMessage());
-
-        log.error("{}: ", exception.getClass().getSimpleName(), exception);
+        Map<String, Object> map = getDefaultResponse(exception);
         return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
     }
 
@@ -48,10 +44,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException exception) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(TIMESTAMP, LocalDateTime.now());
-        map.put(MESSAGE, exception.getMessage());
-        log.error("{}: ", exception.getClass().getSimpleName(), exception);
+        Map<String, Object> map = getDefaultResponse(exception);
         return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
     }
 
@@ -93,6 +86,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         map.put(MESSAGE, "Jsoup connection error occurred");
 
         log.error("{}: ", exception.getClass().getSimpleName(), exception);
-        return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(map, HttpStatus.BAD_GATEWAY);
+    }
+
+    @ExceptionHandler(ExportFileException.class)
+    public ResponseEntity<Object> handleExportFileException(ExportFileException exception) {
+        Map<String, Object> map = getDefaultResponse(exception);
+        return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+    }
+
+    private Map<String, Object> getDefaultResponse(Exception exception) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(TIMESTAMP, LocalDateTime.now());
+        map.put(MESSAGE, exception.getMessage());
+
+        log.error("{}: ", exception.getClass().getSimpleName(), exception);
+        return map;
     }
 }
