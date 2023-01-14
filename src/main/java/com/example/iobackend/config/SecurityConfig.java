@@ -24,8 +24,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 .httpBasic();
+        // csrf on
+        /*http.csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .ignoringAntMatchers("/h2/**");*/
+        // csrf off
         http.csrf().disable();
-        http.headers().frameOptions().disable();
+
+        http.headers().frameOptions().sameOrigin();
     }
 
     @Bean
