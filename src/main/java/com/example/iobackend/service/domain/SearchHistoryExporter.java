@@ -3,16 +3,15 @@ package com.example.iobackend.service.domain;
 import com.example.iobackend.dto.ItemResultDto;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface SearchHistoryExporter {
+public interface SearchHistoryExporter<T> {
     FileType getFileType();
-    void export(List<ItemResultDto> searchHistory, PrintWriter writer) throws IOException;
+    void export(List<ItemResultDto> searchHistory, T output) throws IOException;
 
-    static List<String[]> getHeaderValues(Class<?> clazz) {
+    static Headers getHeaderValues(Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
         List<String[]> fieldNamesToHeaderNames = new ArrayList<>();
         for (Field field : fields) {
@@ -23,6 +22,6 @@ public interface SearchHistoryExporter {
                 fieldNamesToHeaderNames.add(new String[]{key, value});
             }
         }
-        return fieldNamesToHeaderNames;
+        return new Headers(fieldNamesToHeaderNames);
     }
 }

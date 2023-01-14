@@ -10,19 +10,19 @@ import java.io.PrintWriter;
 import java.util.List;
 
 @Component
-public class CsvSearchHistoryExporter implements SearchHistoryExporter {
+public class CsvSearchHistoryExporter implements SearchHistoryExporter<PrintWriter> {
     @Override
     public FileType getFileType() {
         return FileType.CSV;
     }
 
     @Override
-    public void export(List<ItemResultDto> searchHistory, PrintWriter writer) throws IOException {
-        CsvBeanWriter csvWriter = new CsvBeanWriter(writer, CsvPreference.STANDARD_PREFERENCE);
-        List<String[]> fieldNamesToHeaderNames = SearchHistoryExporter.getHeaderValues(ItemResultDto.class);
+    public void export(List<ItemResultDto> searchHistory, PrintWriter output) throws IOException {
+        CsvBeanWriter csvWriter = new CsvBeanWriter(output, CsvPreference.STANDARD_PREFERENCE);
+        Headers fieldNamesToHeaderNames = SearchHistoryExporter.getHeaderValues(ItemResultDto.class);
 
-        String[] csvHeader = getInOrder(fieldNamesToHeaderNames, false);
-        String[] nameMapping = getInOrder(fieldNamesToHeaderNames, true);
+        String[] csvHeader = fieldNamesToHeaderNames.getValuesInOrder();
+        String[] nameMapping = fieldNamesToHeaderNames.getKeysInOrder();
 
         csvWriter.writeHeader(csvHeader);
 
@@ -30,14 +30,5 @@ public class CsvSearchHistoryExporter implements SearchHistoryExporter {
             csvWriter.write(item, nameMapping);
         }
         csvWriter.close();
-    }
-
-    private String[] getInOrder(List<String[]> list, boolean getKeys) {
-        int index = getKeys ? 0 : 1;
-        String[] result = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            result[i] = list.get(i)[index];
-        }
-        return result;
     }
 }
