@@ -15,9 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -50,14 +49,14 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
 
     private String findRedirectedUrl(String url) throws IOException {
 
-        Connection.Response response = Jsoup.connect(url).followRedirects(true).execute();
-//
-//        System.out.println(response.statusCode() + " : " + url);
-//
-//        if (response.hasHeader("location")) {
-//            String redirectUrl = response.header("location");
-//            findRedirectedUrl(redirectUrl);
-//        }
+//        Connection.Response response = Jsoup.connect(url).followRedirects(true).execute();
+////
+////        System.out.println(response.statusCode() + " : " + url);
+////
+////        if (response.hasHeader("location")) {
+////            String redirectUrl = response.header("location");
+////            findRedirectedUrl(redirectUrl);
+////        }
         return url;
 
     }
@@ -72,7 +71,7 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
         for (Element item: shoppingItems){
             Element image = item.selectFirst("div.cat-prod-row__foto>a>img");
 
-            String imageUrl = "https://" + image.attr("src");
+            String imageUrl = "https:" + image.attr("src");
 
             String ceneoProductUrl = item.select("strong.cat-prod-row__name a.go-to-product").attr("href");
             ceneoProductUrl = "https://www.ceneo.pl" + ceneoProductUrl;
@@ -84,14 +83,17 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
                 String valuePrice = product.select("span.value").first().text();
                 String pennyPrice = product.select("span.penny").first().text();
                 String price = valuePrice + pennyPrice;
-                String shopName = product.select("section.product-offers--standard div.js_full-product-offer>div").attr("data-shopurl");
+                String shopName = product.select("div.js_full-product-offer div.product-offer__container").attr("data-shopurl");
 
-                String shopRelativeUrl = product.selectXpath("//a[@class='go-to-shop']").text();
-                shopRelativeUrl = "https://www.ceneo.pl" + shopRelativeUrl;
-                String shopSpecificUrl = findRedirectedUrl(shopRelativeUrl);
+                String shopRelativeUrl = product.select("a.go-to-shop").attr("href");
+                String shopSpecificUrl = "https://www.ceneo.pl" + shopRelativeUrl;
+
+
+                List<String> productReviews = productPageDocument.select("div.js_product-review>div.user-post__body>div.user-post__content>div.user-post__text").stream().map(el -> el.text()).collect(Collectors.toList());
+                String productDescription = productPageDocument.select("div.product-full-description").text();
 
                 results.add(ItemScrapingResult.builder().imageUrl(imageUrl).name(productName).ceneoProductUrl(ceneoProductUrl)
-                                .directShopUrl(shopSpecificUrl).price(price).currency("PLN").shopName(shopName)
+                                .directShopUrl(shopSpecificUrl).price(price).currency("PLN").shopName(shopName).reviews((productReviews)).productInfo(productDescription)
                         .build());
             }
             catch (IOException e) {
@@ -100,9 +102,7 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
 
         }
 
-
         return results;
-
     }
     @Override
     public List<ItemScrapingResult> findItems(ItemInquiryDto query) {
