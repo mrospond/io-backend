@@ -37,7 +37,7 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
     private String contentClass;
 
     private String mapNameToUrlQuery(String name) {
-        return urlRoot + name.replace(" ", delimiter);
+        return urlRoot + "szukaj-" + name.replace(" ", delimiter);
     }
 
 
@@ -50,42 +50,44 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
 
     private String findRedirectedUrl(String url) throws IOException {
 
-        Connection.Response response = Jsoup.connect(url).followRedirects(false).execute();
-
-        System.out.println(response.statusCode() + " : " + url);
-
-        if (response.hasHeader("location")) {
-            String redirectUrl = response.header("location");
-            findRedirectedUrl(redirectUrl);
-        }
+        Connection.Response response = Jsoup.connect(url).followRedirects(true).execute();
+//
+//        System.out.println(response.statusCode() + " : " + url);
+//
+//        if (response.hasHeader("location")) {
+//            String redirectUrl = response.header("location");
+//            findRedirectedUrl(redirectUrl);
+//        }
         return url;
 
     }
 
-    private List extractDataFromCeneo(ItemInquiryDto query, String url)  {
+    private List extractDataFromCeneo(ItemInquiryDto query, String urlRoot)  {
         List<ItemScrapingResult> results = new ArrayList<ItemScrapingResult>();
+        String mappedUrl = mapNameToUrlQuery(query.getQuery());
+        Document document = jsoupConnector.getDocument(mappedUrl);
+        Elements shoppingItems = document.select("div.cat-prod-row__body ");
 
-        Document document = jsoupConnector.getDocument(url);
-        Elements shoppingItems = document.selectXpath("//div[@class='cat-prod-row__body ']");
-
+        // Parse all items on the front page
         for (Element item: shoppingItems){
-            Element image = item.selectXpath("//div[@class='cat-prod-row__foto']//img").first();
+            Element image = item.selectFirst("div.cat-prod-row__foto>a>img");
 
-            String imageUrl = image.attr("src");
-            //String productName = image.attr("alt");
-            String ceneoProductUrl = item.selectXpath("//strong[@class='cat-prod-row__name']//a[contains(@class, 'go-to-product')]").attr("href");
+            String imageUrl = "https://" + image.attr("src");
+
+            String ceneoProductUrl = item.select("strong.cat-prod-row__name a.go-to-product").attr("href");
+            ceneoProductUrl = "https://www.ceneo.pl" + ceneoProductUrl;
 
             try{
                 Document productPageDocument = Jsoup.connect(ceneoProductUrl).timeout(10000).get();
-                String productName = productPageDocument.selectXpath("//div[@class='product-top__title']//h1").attr("text");
-                Element product = productPageDocument.selectXpath("//section[contains(@class, 'product-offers--standard')]////li[contains(@class, 'product-offers__list')]").first();
-                String valuePrice = product.selectXpath("//span[@class='value']").attr("text");
-                String pennyPrice = product.selectXpath("//span[@class='penny']").attr("text");
-                String price = valuePrice + "." + pennyPrice;
-                String shopName = product.selectXpath("//div[contains(@class, 'js_full-product-offer')]/div").attr("data-shopurl");
+                String productName = productPageDocument.select("div.product-top__title h1").text();
+                Element product = productPageDocument.select("section.product-offers--standard li.product-offers__list__item").first();
+                String valuePrice = product.select("span.value").first().text();
+                String pennyPrice = product.select("span.penny").first().text();
+                String price = valuePrice + pennyPrice;
+                String shopName = product.select("section.product-offers--standard div.js_full-product-offer>div").attr("data-shopurl");
 
-                String shopRelativeUrl = product.selectXpath("//a[@class='go-to-shop']").attr("text");
-                shopRelativeUrl = "ceneo.pl" + shopRelativeUrl;
+                String shopRelativeUrl = product.selectXpath("//a[@class='go-to-shop']").text();
+                shopRelativeUrl = "https://www.ceneo.pl" + shopRelativeUrl;
                 String shopSpecificUrl = findRedirectedUrl(shopRelativeUrl);
 
                 results.add(ItemScrapingResult.builder().imageUrl(imageUrl).name(productName).ceneoProductUrl(ceneoProductUrl)
@@ -108,26 +110,5 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
         //String queryUrl = constructUrlFromParameters(query);
         List<ItemScrapingResult> itemScrapingResults = extractDataFromCeneo(query, urlRoot);
         return itemScrapingResults;
-
-//        return List.of(
-//                ItemScrapingResult.builder()
-//                        .name("Syrop na kaszel")
-//                        .url("exampleurl.com")
-//                        .currency("PLN")
-//                        .shippingDays(1L)
-//                        .shop("Allegro")
-//                        .price(new BigDecimal("15.00"))
-//                        .shippingPrice(new BigDecimal("2.00"))
-//                        .build(),
-//                ItemScrapingResult.builder()
-//                        .name("Tabletki do ssania")
-//                        .url("exampleurl.com")
-//                        .currency("PLN")
-//                        .shippingDays(2L)
-//                        .shop("Jakiśsklep")
-//                        .price(new BigDecimal("10.00"))
-//                        .shippingPrice(new BigDecimal("1.50"))
-//                        .build()
-//        );
     }
 }
