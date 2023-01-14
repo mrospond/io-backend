@@ -15,4 +15,6 @@ public class ItemScrapingResult {
     private Long shippingDays;
     private String currency;
     private String shop;
+
+    private String imageUrl;
 }
