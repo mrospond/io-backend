@@ -129,7 +129,8 @@ Na razie zostawiam wyłączone.
   <i>Metoda HTTP: GET <br>
   Login: wymagany <br></i>
   
-  Służy do eksportu historii wyszukiwań zalogowanego użytkownika do wybranego formatu przekazanego jako zmienna url: `extension`.
+  Służy do eksportu historii wyszukiwań zalogowanego użytkownika do wybranego formatu przekazanego jako zmienna url: `extension`. <br>
+  Obsługiwane formaty: csv, pdf
   
   Przykład: `localhost:8080/search/history/export?extension=csv`<br>
   Odpowiedź: plik csv zawierający historię wyszukiwania<br>
