@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -70,13 +70,14 @@ public class ItemSearchService {
     }
 
     @Transactional
-    public void exportHistory(PrintWriter writer, SearchHistoryExporter exporter, Authentication authentication) {
+    public void exportHistory(String extension, OutputStream output, Authentication authentication) {
+        SearchHistoryExporter exporter = getExporter(extension);
         if (exporter != null) {
             List<ItemResultDto> searchHistory = this.getSearchHistory(authentication);
             try {
-                exporter.export(searchHistory, writer);
+                exporter.export(searchHistory, output);
             } catch (IOException e) {
-                throw new ExportFileException("Unable to get PrintWriter instance");
+                throw new ExportFileException("Unable to export file");
             }
         } else {
             throw new ExportFileException("Unknown file extension");

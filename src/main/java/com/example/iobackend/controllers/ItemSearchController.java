@@ -5,7 +5,6 @@ import com.example.iobackend.dto.ItemResultDto;
 import com.example.iobackend.dto.ItemScrapingResult;
 import com.example.iobackend.service.ItemSearchService;
 import com.example.iobackend.service.domain.FileType;
-import com.example.iobackend.service.domain.SearchHistoryExporter;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -42,9 +41,8 @@ public class ItemSearchController {
     @GetMapping("/history/export")
     public void downloadHistory(@RequestParam(name = "extension") String fileExtension,
                                                     Authentication authentication, HttpServletResponse response) throws IOException {
-        SearchHistoryExporter exporter = itemSearchService.getExporter(fileExtension);
+        FileType fileType = FileType.fromString(fileExtension);
 
-        FileType fileType = exporter.getFileType();
         response.setContentType(fileType.getContentType());
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
 
@@ -52,7 +50,6 @@ public class ItemSearchController {
         String headerValue = "attachment; filename=history_" + dateTime + "." + fileType.getExtension();
         response.addHeader("Content-Disposition", headerValue);
 
-        itemSearchService.exportHistory(response.getWriter(), exporter, authentication);
+        itemSearchService.exportHistory(fileExtension, response.getOutputStream(), authentication);
     }
-
 }

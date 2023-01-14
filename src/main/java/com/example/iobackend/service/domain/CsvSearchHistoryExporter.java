@@ -6,23 +6,26 @@ import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.List;
 
 @Component
-public class CsvSearchHistoryExporter implements SearchHistoryExporter<PrintWriter> {
+public class CsvSearchHistoryExporter implements SearchHistoryExporter {
     @Override
     public FileType getFileType() {
         return FileType.CSV;
     }
 
     @Override
-    public void export(List<ItemResultDto> searchHistory, PrintWriter output) throws IOException {
-        CsvBeanWriter csvWriter = new CsvBeanWriter(output, CsvPreference.STANDARD_PREFERENCE);
+    public void export(List<ItemResultDto> searchHistory, OutputStream output) throws IOException {
+        Writer writer = new OutputStreamWriter(output);
+        CsvBeanWriter csvWriter = new CsvBeanWriter(writer, CsvPreference.STANDARD_PREFERENCE);
         Headers fieldNamesToHeaderNames = SearchHistoryExporter.getHeaderValues(ItemResultDto.class);
 
-        String[] csvHeader = fieldNamesToHeaderNames.getValuesInOrder();
-        String[] nameMapping = fieldNamesToHeaderNames.getKeysInOrder();
+        String[] csvHeader = fieldNamesToHeaderNames.getHeaderNames();
+        String[] nameMapping = fieldNamesToHeaderNames.getFieldNames();
 
         csvWriter.writeHeader(csvHeader);
 
