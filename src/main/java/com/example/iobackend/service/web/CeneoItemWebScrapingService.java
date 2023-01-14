@@ -4,7 +4,6 @@ import com.example.iobackend.dto.ItemInquiryDto;
 import com.example.iobackend.dto.ItemScrapingResult;
 import com.example.iobackend.jsoup.JsoupConnector;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,8 +13,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
