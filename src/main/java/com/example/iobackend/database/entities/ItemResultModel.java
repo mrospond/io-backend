@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,6 +24,7 @@ public class ItemResultModel {
     @GeneratedValue
     private Long id;
     private String name;
+    @Column(length = 1024)
     private String url;
     private String price;
     @CreationTimestamp

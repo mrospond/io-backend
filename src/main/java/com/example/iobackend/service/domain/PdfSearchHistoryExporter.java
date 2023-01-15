@@ -2,8 +2,10 @@ package com.example.iobackend.service.domain;
 
 import com.example.iobackend.dto.ItemResultDto;
 import com.example.iobackend.exceptions.ExportFileException;
+import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.action.PdfAction;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
@@ -52,7 +56,7 @@ public class PdfSearchHistoryExporter implements SearchHistoryExporter {
 
     private void addHeaderRow(Table table, String[] values) {
         for (String headerValue : values) {
-            table.addCell(new Cell().add(new Paragraph(headerValue)));
+            table.addHeaderCell(new Cell().add(new Paragraph(headerValue)));
         }
     }
 
@@ -63,8 +67,21 @@ public class PdfSearchHistoryExporter implements SearchHistoryExporter {
             int index = getIndexOf(field.getName(), fieldsToAdd);
             if (index != -1) {
                 field.setAccessible(true);
-                String value = String.valueOf(field.get(item));
-                table.addCell(new Cell().add(new Paragraph(value)));
+                Cell cell;
+                if (isLink(field)) {
+                    String value = "Link";
+                    cell = new Cell().add(new Paragraph(value).setUnderline().setFontColor(ColorConstants.BLUE));
+                    cell.setAction(PdfAction.createURI(String.valueOf(field.get(item))));
+                } else if (isDate(field)) {
+                    LocalDateTime date = LocalDateTime.parse(String.valueOf(field.get(item)));
+                    String format = getDateFormat(field);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+                    cell = new Cell().add(new Paragraph(date.format(formatter)));
+                } else {
+                    cell = new Cell().add(new Paragraph(String.valueOf(field.get(item))));
+                }
+
+                table.addCell(cell);
             }
         }
     }
@@ -76,5 +93,17 @@ public class PdfSearchHistoryExporter implements SearchHistoryExporter {
             }
         }
         return -1;
+    }
+
+    private boolean isLink(Field field) {
+        return field.isAnnotationPresent(Url.class);
+    }
+
+    private boolean isDate(Field field) {
+        return field.isAnnotationPresent(Date.class);
+    }
+
+    private String getDateFormat(Field field) {
+        return field.getAnnotation(Date.class).format();
     }
 }

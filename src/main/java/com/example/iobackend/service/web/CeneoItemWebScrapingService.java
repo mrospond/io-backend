@@ -13,6 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -90,10 +91,20 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
 
                 List<String> productReviews = productPageDocument.select("div.js_product-review>div.user-post__body>div.user-post__content>div.user-post__text").stream().map(el -> el.text()).collect(Collectors.toList());
                 String productDescription = productPageDocument.select("div.product-full-description").text();
-
-                results.add(ItemScrapingResult.builder().imageUrl(imageUrl).name(productName).ceneoProductUrl(ceneoProductUrl)
-                                .directShopUrl(shopSpecificUrl).price(price).currency("PLN").shopName(shopName).reviews((productReviews)).productInfo(productDescription)
-                        .build());
+                results.add(
+                        ItemScrapingResult.builder()
+                                .imageUrl(imageUrl)
+                                .name(productName)
+                                .ceneoProductUrl(ceneoProductUrl)
+                                .directShopUrl(shopSpecificUrl)
+                                .price(price.replace(",", "."))
+                                .currency("PLN")
+                                .shopName(shopName)
+                                .reviews((productReviews))
+                                .productInfo(productDescription)
+                                .timestamp(LocalDateTime.now())
+                                .build()
+                );
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
