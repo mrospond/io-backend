@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Component
@@ -20,7 +21,7 @@ public class CsvSearchHistoryExporter implements SearchHistoryExporter {
 
     @Override
     public void export(List<ItemResultDto> searchHistory, OutputStream output) throws IOException {
-        Writer writer = new OutputStreamWriter(output);
+        Writer writer = new OutputStreamWriter(output, StandardCharsets.UTF_8);
         CsvBeanWriter csvWriter = new CsvBeanWriter(writer, CsvPreference.STANDARD_PREFERENCE);
         Headers fieldNamesToHeaderNames = SearchHistoryExporter.getHeaderValues(ItemResultDto.class);
 
