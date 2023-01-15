@@ -8,7 +8,7 @@ import com.example.iobackend.dto.ItemResultDto;
 import com.example.iobackend.dto.ItemScrapingResult;
 import com.example.iobackend.exceptions.ExportFileException;
 import com.example.iobackend.mappers.ItemMapper;
-import com.example.iobackend.service.domain.SearchHistoryExporter;
+import com.example.iobackend.service.domain.export.SearchHistoryExporter;
 import com.example.iobackend.service.web.ItemWebScrapingService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

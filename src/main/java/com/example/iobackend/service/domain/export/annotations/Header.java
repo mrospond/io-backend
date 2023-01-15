@@ -1,4 +1,4 @@
-package com.example.iobackend.service.domain;
+package com.example.iobackend.service.domain.export.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

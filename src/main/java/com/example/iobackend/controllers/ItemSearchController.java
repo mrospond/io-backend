@@ -4,7 +4,7 @@ import com.example.iobackend.dto.ItemInquiryDto;
 import com.example.iobackend.dto.ItemResultDto;
 import com.example.iobackend.dto.ItemScrapingResult;
 import com.example.iobackend.service.ItemSearchService;
-import com.example.iobackend.service.domain.FileType;
+import com.example.iobackend.service.domain.export.util.FileType;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

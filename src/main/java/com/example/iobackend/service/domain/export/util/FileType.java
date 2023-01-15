@@ -1,4 +1,4 @@
-package com.example.iobackend.service.domain;
+package com.example.iobackend.service.domain.export.util;
 
 import com.example.iobackend.exceptions.ExportFileException;
 import lombok.AllArgsConstructor;

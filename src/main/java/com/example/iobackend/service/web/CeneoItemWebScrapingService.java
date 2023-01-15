@@ -74,7 +74,7 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
             String imageUrl = "https:" + image.attr("src");
 
             String ceneoProductUrl = item.select("strong.cat-prod-row__name a.go-to-product").attr("href");
-            ceneoProductUrl = "https://www.ceneo.pl" + ceneoProductUrl;
+            ceneoProductUrl = "https://www.ceneo.pl" + ceneoProductUrl.replace("#", "");
 
             try{
                 Document productPageDocument = Jsoup.connect(ceneoProductUrl).timeout(10000).get();
