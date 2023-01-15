@@ -1,6 +1,8 @@
 package com.example.iobackend.service;
 
 import com.example.iobackend.database.entities.UserModel;
+import com.example.iobackend.database.entities.VerificationToken;
+import com.example.iobackend.database.repository.TokenRepository;
 import com.example.iobackend.database.repository.UserRepository;
 import com.example.iobackend.dto.LoginDto;
 import com.example.iobackend.dto.RegistrationDto;
@@ -21,10 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class UserLoginRegisterService {
     private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public void registerNewUser(RegistrationDto registrationDto) {
+    public UserModel registerNewUser(RegistrationDto registrationDto) {
         if (userRepository.existsByUsername(registrationDto.getUsername())) {
             String message = "Username " + registrationDto.getUsername() + " already exists";
             log.error(message);
@@ -34,8 +37,9 @@ public class UserLoginRegisterService {
                 .username(registrationDto.getUsername())
                 .passwordHash(passwordEncoder.encode(registrationDto.getPassword()))
                 .build();
-        userRepository.save(userModel);
+        UserModel user = userRepository.save(userModel);
         log.info("User registered: " + registrationDto.getUsername());
+        return user;
     }
 
     public void login(LoginDto loginDto) {
@@ -44,5 +48,10 @@ public class UserLoginRegisterService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("User logged in: " + loginDto.getUsername());
+    }
+
+    public void createVerificationToken(UserModel user, String token) {
+        VerificationToken verificationToken = new VerificationToken(token, user);
+        tokenRepository.save(verificationToken);
     }
 }
