@@ -46,7 +46,7 @@ Na razie zostawiam wyłączone.
   ```json
   {
     "username": "user123",
-    "email": "example.com",
+    "email": "example@example.com",
     "password": "aA123456#",
     "passwordConfirmation": "aA123456#"
   }
@@ -56,7 +56,7 @@ Na razie zostawiam wyłączone.
   - pola `username`, `password`, `passwordConfirmation` oraz `email` nie są puste
   - pole `username` zawiera od 4 do 20 znaków
   - pole `username` zawiera wyłącznie litery oraz cyfry
-  - pole `email` posiada format odpowiedni dla adresów email
+  - pole `email` posiada format odpowiedni dla adresów email (<user>@<poczta>.<abc>)
   - pola `password` oraz `passwordConfirmation` są takie same
   - pola `password` oraz `passwordConfirmation` zawierają co najmniej 8 znaków, przynajmniej jedną dużą literę, jedną małą literę, jedną cyfrę i jeden znak specjalny
   - nazwa użytkownika, którego próbujemy zarejestrować, jeszcze nie istnieje w bazie
