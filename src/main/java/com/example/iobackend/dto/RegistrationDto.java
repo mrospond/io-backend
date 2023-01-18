@@ -4,6 +4,7 @@ import com.example.iobackend.validation.PasswordMatches;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -20,6 +21,9 @@ public class RegistrationDto {
     @Size(min = 4, max = 20, message = "Username must be from 4 to 20 characters long")
     @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Username must be alphanumeric")
     private String username;
+    @NotBlank
+    @Email
+    private String email;
     @NotBlank(message = "Password is mandatory")
     @Pattern(regexp = PASSWORD_REGEX, message = PASSWORD_MESSAGE)
     private String password;

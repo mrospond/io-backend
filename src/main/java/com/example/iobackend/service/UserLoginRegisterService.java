@@ -6,6 +6,8 @@ import com.example.iobackend.database.repository.TokenRepository;
 import com.example.iobackend.database.repository.UserRepository;
 import com.example.iobackend.dto.LoginDto;
 import com.example.iobackend.dto.RegistrationDto;
+import com.example.iobackend.exceptions.EmailAlreadyExistsException;
+import com.example.iobackend.exceptions.TokenNotFoundException;
 import com.example.iobackend.exceptions.UsernameAlreadyExistsException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +35,29 @@ public class UserLoginRegisterService {
             log.error(message);
             throw new UsernameAlreadyExistsException(message);
         }
+        if (userRepository.existsByEmail(registrationDto.getEmail())) {
+            String message = "Email " + registrationDto.getEmail() + " is already registered";
+            log.error(message);
+            throw new EmailAlreadyExistsException(message);
+        }
         UserModel userModel = UserModel.builder()
                 .username(registrationDto.getUsername())
+                .email(registrationDto.getEmail())
                 .passwordHash(passwordEncoder.encode(registrationDto.getPassword()))
                 .build();
         UserModel user = userRepository.save(userModel);
         log.info("User registered: " + registrationDto.getUsername());
         return user;
+    }
+
+    public UserModel getUserByToken(String token) {
+        return tokenRepository.findByToken(token)
+                .orElseThrow(() -> new TokenNotFoundException("Verification token not found"))
+                .getUser();
+    }
+
+    public void updateUser(UserModel user) {
+        userRepository.save(user);
     }
 
     public void login(LoginDto loginDto) {
@@ -53,5 +71,10 @@ public class UserLoginRegisterService {
     public void createVerificationToken(UserModel user, String token) {
         VerificationToken verificationToken = new VerificationToken(token, user);
         tokenRepository.save(verificationToken);
+    }
+
+    public VerificationToken getVerificationToken(String token) {
+        return tokenRepository.findByToken(token)
+                .orElseThrow(() -> new TokenNotFoundException("Verification token not found"));
     }
 }

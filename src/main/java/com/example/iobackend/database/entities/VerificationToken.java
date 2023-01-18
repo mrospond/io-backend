@@ -1,6 +1,8 @@
 package com.example.iobackend.database.entities;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +15,8 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "user_verification_tokens")
 public class VerificationToken {
@@ -33,10 +37,11 @@ public class VerificationToken {
     public VerificationToken(String token, UserModel user) {
         this.token = token;
         this.user = user;
+        calculateExpiryDate();
     }
 
-    private LocalDateTime calculateExpiryDate(int expiryTimeInMinutes) {
+    private void calculateExpiryDate() {
         LocalDateTime now = LocalDateTime.now();
-        return now.plusMinutes(expiryTimeInMinutes);
+        this.expiryDate = now.plusMinutes(EXPIRATION);
     }
 }

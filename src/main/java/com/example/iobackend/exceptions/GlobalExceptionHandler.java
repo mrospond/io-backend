@@ -6,7 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,18 +27,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String STATUS = "status";
     private static final String ERRORS = "errors";
 
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<Object> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException exception) {
+    @ExceptionHandler({
+            UsernameAlreadyExistsException.class, EmailAlreadyExistsException.class,
+            ExportFileException.class
+    })
+    public ResponseEntity<Object> handleGenericExceptionWith400StatusCode(Exception exception) {
         Map<String, Object> map = getDefaultResponse(exception);
         return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException exception) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(TIMESTAMP, LocalDateTime.now());
-        map.put(MESSAGE, exception.getMessage());
-        log.error("{}: ", exception.getClass().getSimpleName(), exception);
+        Map<String, Object> map = getDefaultResponse(exception);
         return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
     }
 
@@ -69,11 +69,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Object> handleAuthenticationFailure(AuthenticationException exception) {
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<Object> handleDisabledException(DisabledException exception) {
         Map<String, Object> map = new HashMap<>();
         map.put(TIMESTAMP, LocalDateTime.now());
-        map.put(MESSAGE, "Failed to log in");
+        map.put(MESSAGE, "Account is disabled. Activate with an activation link it before logging in");
 
         log.error("{}: ", exception.getClass().getSimpleName(), exception);
         return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
@@ -89,10 +89,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(map, HttpStatus.BAD_GATEWAY);
     }
 
-    @ExceptionHandler(ExportFileException.class)
-    public ResponseEntity<Object> handleExportFileException(ExportFileException exception) {
+    @ExceptionHandler(TokenNotFoundException.class)
+    public ResponseEntity<Object> handleTokenNotFoundException(TokenNotFoundException exception) {
         Map<String, Object> map = getDefaultResponse(exception);
-        return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
     }
 
     private Map<String, Object> getDefaultResponse(Exception exception) {

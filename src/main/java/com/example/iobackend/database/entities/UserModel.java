@@ -29,16 +29,16 @@ public class UserModel {
     private Long id;
     @Column(unique = true, nullable = false)
     private String username;
-    @Column(nullable = false)
-    private String passwordHash;
     private String email;
     private boolean enabled;
+    @Column(nullable = false)
+    private String passwordHash;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private List<ItemResultModel> searchHistory;
 
     public UserModel() {
-        enabled = false;
+        this.enabled = false;
     }
 
     public void addItemResult(ItemResultModel item) {
