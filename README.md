@@ -9,9 +9,22 @@
 
 Żeby uruchomić aplikację należy przejść do klasy `IoBackendApplication.java` i wywołać metodę main(). Po kilku sekundach aplikacja powinna być dostępna pod adresem `localhost:8080`.
 
-## Struktura bazy danych
+## Baza danych
 
-Na razie są 2 tabele: `item_search_history` zawierająca wszystkie wyszukane przedmioty oraz `users` zawierająca hashe haseł (w BCrypt) i nazwy użytkowników. W bazie znajduje się 3 testowych użytkowników: user, user2 i user3. Wszyscy mają to samo hasło: 12345.
+H2 - baza testowa
+PostgreSQL - baza docelowa
+
+Aby uruchomić bazę testową, należy uruchomić aplikację z profilem `dev` (`Konfiguracje -> Edit Configurations.. -> + -> taka sama konfiguracja -> Active profiles: dev -> OK`). Nic więcej nie trzeba, bo baza H2 jest in-memory. 
+
+Aby uruchomić bazę PostgreSQL, trzeba mieć zainstalowanego Dockera. W konsoli należy wpisać:
+
+`docker run --name io-database -e POSTGRES_PASSWORD=bmeUYnrCjasZp2ej -e POSTGRES_USER=admin -e POSTGRES_DB=io_database -p 5432:5432 -d postgres`
+
+Powyższa komenda uruchomi bazę o nazwie io_database na porcie 5432. 
+Połączenie z bazą jest już skonfigurowane, teraz wystarczy już tylko uruchomić aplikację (bez profilu `dev`, inaczej będziemy korzystać z H2).
+
+Bazę danych tworzą 2 tabele: `item_search_history` zawierająca wszystkie wyszukane przedmioty oraz `users` zawierająca hashe haseł (w BCrypt) i nazwy użytkowników. <br>
+W testowej bazie znajduje się 3 użytkowników: user, user2 i user3. Wszyscy mają to samo hasło: 12345.
 
 ## CSRF
 
