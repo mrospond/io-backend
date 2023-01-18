@@ -23,12 +23,12 @@ Aby uruchomić bazę PostgreSQL, trzeba mieć zainstalowanego Dockera. W konsoli
 Powyższa komenda uruchomi bazę o nazwie io_database na porcie 5432. 
 Połączenie z bazą jest już skonfigurowane, teraz wystarczy już tylko uruchomić aplikację (bez profilu `dev`, inaczej będziemy korzystać z H2).
 
-Bazę danych tworzą 2 tabele: `item_search_history` zawierająca wszystkie wyszukane przedmioty oraz `users` zawierająca hashe haseł (w BCrypt) i nazwy użytkowników. <br>
+Bazę danych tworzą 3 tabele: `item_search_history` zawierająca wszystkie wyszukane przedmioty, `users` zawierająca hashe haseł (w BCrypt) i dane użytkowników oraz `user_verification_tokens` zawierająca wszystkie do tej pory wygenerowane tokeny werydikacyjne. <br>
 W testowej bazie znajduje się 3 użytkowników: user, user2 i user3. Wszyscy mają to samo hasło: 12345.
 
 ## CSRF
 
-Po wysłaniu pierwszego requesta do endpointów wymagających logowania (`/user/register`, `/user/login`, `/search/history`, `/search/history/export`) dostaniemy w odpowiedzi status 403:Forbidden wraz z ciasteczkiem `XRSF-TOKEN`. Na etapie integracji z frontendem trzeba będzie napisać logikę (we frontendzie), która pobierze wartość tego ciasteczka i dołączy do każdego kolejnego requesta w sesji <i><b>nagłówek</i></b> o nazwie `X-XSRF-TOKEN` i pobranej wartości. To taka forma zabezpieczenia przed CSRF. 
+Po wysłaniu pierwszego requesta do endpointów wymagających logowania (`/register`, `/login`, `/search/history`, `/search/history/export`) dostaniemy w odpowiedzi status 403:Forbidden wraz z ciasteczkiem `XRSF-TOKEN`. Na etapie integracji z frontendem trzeba będzie napisać logikę (we frontendzie), która pobierze wartość tego ciasteczka i dołączy do każdego kolejnego requesta w sesji <i><b>nagłówek</i></b> o nazwie `X-XSRF-TOKEN` i pobranej wartości. To taka forma zabezpieczenia przed CSRF. 
 
 Podczas lokalnego testowania można jednak wyłączyć tę funkcję za pomocą odkomentowania/zakomentowania odpowiednich linijek:
 
@@ -61,6 +61,8 @@ Na razie zostawiam wyłączone.
   - pola `password` oraz `passwordConfirmation` zawierają co najmniej 8 znaków, przynajmniej jedną dużą literę, jedną małą literę, jedną cyfrę i jeden znak specjalny
   - nazwa użytkownika, którego próbujemy zarejestrować, jeszcze nie istnieje w bazie
   - email użytkownika, którego próbujemy zarejestrować, jeszcze nie istnieje w bazie
+  
+  Po rejestracji należy aktywować konto za pomocą linku przesłanego na adres email w ciągu 24 godzin. 
   
 - `/login` <br>
   <i>Metoda HTTP: POST <br>
