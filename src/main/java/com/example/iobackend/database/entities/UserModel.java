@@ -3,7 +3,6 @@ package com.example.iobackend.database.entities;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -20,7 +19,6 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "users")
@@ -31,11 +29,17 @@ public class UserModel {
     private Long id;
     @Column(unique = true, nullable = false)
     private String username;
+    private String email;
+    private boolean enabled;
     @Column(nullable = false)
     private String passwordHash;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private List<ItemResultModel> searchHistory;
+
+    public UserModel() {
+        this.enabled = false;
+    }
 
     public void addItemResult(ItemResultModel item) {
         searchHistory.add(item);

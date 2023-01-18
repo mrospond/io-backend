@@ -63,7 +63,7 @@ public class ItemSearchService {
             UserModel userModel = userRepository.findFirstByUsername(username).orElseThrow();
             for (ItemScrapingResult item : items) {
                 ItemResultModel itemModel = itemMapper.dtoToModel(item);
-                userModel.getSearchHistory().add(itemModel);
+                userModel.addItemResult(itemModel);
             }
             userRepository.save(userModel);
         }
