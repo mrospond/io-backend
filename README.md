@@ -62,7 +62,7 @@ Na razie zostawiam wyłączone.
   - nazwa użytkownika, którego próbujemy zarejestrować, jeszcze nie istnieje w bazie
   - email użytkownika, którego próbujemy zarejestrować, jeszcze nie istnieje w bazie
   
-  Po rejestracji należy aktywować konto za pomocą linku przesłanego na adres email w ciągu 24 godzin. 
+  Po rejestracji należy aktywować konto w ciągu 24 godzin za pomocą linku przesłanego na adres email. 
   
 - `/login` <br>
   <i>Metoda HTTP: POST <br>
