@@ -2,6 +2,7 @@ package com.example.iobackend.service;
 
 import com.example.iobackend.database.entities.UserModel;
 import com.example.iobackend.database.repository.UserRepository;
+import com.example.iobackend.exceptions.UserNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findFirstByUsername(username)
                 .map(this::createUserDetails)
-                .orElseThrow();
+                .orElseThrow(() -> new UserNotFoundException("This user doesn't exist"));
     }
 
     private UserDetails createUserDetails(UserModel user) {
