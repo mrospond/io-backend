@@ -14,7 +14,7 @@
 H2 - baza testowa <br>
 PostgreSQL - baza docelowa
 
-Aby uruchomić bazę testową, należy uruchomić aplikację z profilem `dev` (`Konfiguracje -> Edit Configurations.. -> + -> taka sama konfiguracja -> Active profiles: dev -> OK`). Nic więcej nie trzeba, bo baza H2 jest in-memory. 
+Aby uruchomić bazę testową, należy uruchomić aplikację z profilem `dev` (`Konfiguracje -> Edit Configurations.. -> + -> <stwórz konfigurację z tymi samymi parametrami co obecna> -> Active profiles: dev -> OK`). Nic więcej nie trzeba, bo baza H2 jest in-memory. 
 
 Aby uruchomić bazę PostgreSQL, trzeba mieć zainstalowanego Dockera. W konsoli należy wpisać:
 
