@@ -47,17 +47,20 @@ Na razie zostawiam wyłączone.
   {
     "username": "user123",
     "password": "aA123456#",
+    "email": "example.com",
     "passwordConfirmation": "aA123456#"
   }
   ```
 
   Służy do rejestracji użytkownika. W odpowiedzi dostaniemy informację o sukcesie lub błąd, jeżeli jeden z następujących warunków nie zostanie spełniony:
-  - pola `username`, `password` oraz `passwordConfirmation` nie są puste
+  - pola `username`, `password`, `passwordConfirmation` oraz `email` nie są puste
   - pole `username` zawiera od 4 do 20 znaków
   - pole `username` zawiera wyłącznie litery oraz cyfry
+  - pole `email` posiada format odpowiedni dla adresów email
   - pola `password` oraz `passwordConfirmation` są takie same
   - pola `password` oraz `passwordConfirmation` zawierają co najmniej 8 znaków, przynajmniej jedną dużą literę, jedną małą literę, jedną cyfrę i jeden znak specjalny
   - nazwa użytkownika, którego próbujemy zarejestrować, jeszcze nie istnieje w bazie
+  - email użytkownika, którego próbujemy zarejestrować, jeszcze nie istnieje w bazie
   
 - `/login` <br>
   <i>Metoda HTTP: POST <br>
