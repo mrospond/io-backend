@@ -46,8 +46,8 @@ Na razie zostawiam wyłączone.
   ```json
   {
     "username": "user123",
-    "password": "aA123456#",
     "email": "example.com",
+    "password": "aA123456#",
     "passwordConfirmation": "aA123456#"
   }
   ```
