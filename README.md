@@ -38,7 +38,7 @@ Na razie zostawiam wyłączone.
 
 ## Endpointy
 
-- `/user/register` <br>
+- `/register` <br>
   <i>Metoda HTTP: POST <br>
   Login: niewymagany <br></i>
   
@@ -59,7 +59,7 @@ Na razie zostawiam wyłączone.
   - pola `password` oraz `passwordConfirmation` zawierają co najmniej 8 znaków, przynajmniej jedną dużą literę, jedną małą literę, jedną cyfrę i jeden znak specjalny
   - nazwa użytkownika, którego próbujemy zarejestrować, jeszcze nie istnieje w bazie
   
-- `/user/login` <br>
+- `/login` <br>
   <i>Metoda HTTP: POST <br>
   Login: niewymagany <br></i>
   
