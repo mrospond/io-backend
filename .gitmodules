@@ -1,0 +1,3 @@
+[submodule "io_project_front-end"]
+	path = io_project_front-end
+	url = https://github.com/krzywdziu/io_project_front-end.git
