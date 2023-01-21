@@ -56,7 +56,7 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
                             .price(price)
                             .currency("PLN")
                             .shopName(shopName)
-                            .reviews((productReviews))
+                            .reviews(productReviews)
                             .productInfo(productDescription)
                             .timestamp(LocalDateTime.now())
                             .build()
