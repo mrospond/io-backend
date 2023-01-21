@@ -26,10 +26,6 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
     @Value("${query.delimiter}")
     private String delimiter;
 
-    private String mapNameToUrlQuery(String name) {
-        return urlRoot + "/szukaj-" + name.replace(" ", delimiter);
-    }
-
     private List<ItemScrapingResult> extractDataFromCeneo(ItemInquiryDto query)  {
         List<ItemScrapingResult> results = new ArrayList<>();
         String mappedUrl = mapNameToUrlQuery(query.getQuery());
@@ -38,37 +34,26 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
 
         // Parse all items on the front page
         for (Element item: shoppingItems){
-            Element image = item.selectFirst("div.cat-prod-row__foto>a>img");
+            String imageUrl = getImageUrl(item);
+            String ceneoProductUrl = getCeneoProductUrl(item);
 
-            String imageUrl = "https:" + image.attr("src");
+            Document productPage = jsoupConnector.getDocument(ceneoProductUrl);
 
-            String ceneoProductUrl = item.select("strong.cat-prod-row__name a.go-to-product").attr("href");
-            ceneoProductUrl = urlRoot + ceneoProductUrl.replace("#", "");
+            String productName = getProductName(document);
+            Element product = getProduct(productPage);
+            String price = getProductPrice(product);
+            String shopName = getProductShopName(product);
+            String directShopUrl = getProductDirectUrl(product);
+            List<String> productReviews = getProductReviews(productPage);
+            String productDescription = getProductDescription(productPage);
 
-            Document productPageDocument = jsoupConnector.getDocument(ceneoProductUrl);
-            String productName = productPageDocument.select("div.product-top__title h1").text();
-            Element product = productPageDocument.select("section.product-offers--standard li.product-offers__list__item").first();
-            String valuePrice = product.select("span.value").first().text();
-            String pennyPrice = product.select("span.penny").first().text();
-            String price = valuePrice + pennyPrice;
-            String shopName = product.select("div.js_full-product-offer div.product-offer__container").attr("data-shopurl");
-
-            String shopRelativeUrl = product.select("a.go-to-shop").attr("href");
-            String shopSpecificUrl = urlRoot + shopRelativeUrl;
-
-            List<String> productReviews = productPageDocument
-                    .select("div.js_product-review>div.user-post__body>div.user-post__content>div.user-post__text")
-                    .stream()
-                    .map(Element::text)
-                    .toList();
-            String productDescription = productPageDocument.select("div.product-full-description").text();
             results.add(
                     ItemScrapingResult.builder()
                             .imageUrl(imageUrl)
                             .name(productName)
                             .ceneoProductUrl(ceneoProductUrl)
-                            .directShopUrl(shopSpecificUrl)
-                            .price(makePriceCorrections(price))
+                            .directShopUrl(directShopUrl)
+                            .price(price)
                             .currency("PLN")
                             .shopName(shopName)
                             .reviews((productReviews))
@@ -85,7 +70,55 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
         return extractDataFromCeneo(query);
     }
 
-    private String makePriceCorrections(String price) {
+    private String getImageUrl(Element product) {
+        Element image = product.selectFirst("div.cat-prod-row__foto>a>img");
+        return "https:" + image.attr("src");
+    }
+
+    private String getCeneoProductUrl(Element product) {
+        String ceneoProductUrl = product.select("strong.cat-prod-row__name a.go-to-product")
+                .attr("href");
+        return urlRoot + ceneoProductUrl.replace("#", "");
+    }
+
+    private String getProductName(Document productPage) {
+        return productPage.select("div.product-top__title h1").text();
+    }
+
+    private Element getProduct(Document productPage) {
+        return productPage.select("section.product-offers--standard li.product-offers__list__item")
+                .first();
+    }
+
+    private String getProductPrice(Element product) {
+        String valuePrice = product.select("span.value").first().text();
+        String pennyPrice = product.select("span.penny").first().text();
+        String price = valuePrice + pennyPrice;
         return price.replace(",", ".").replace("\s", "");
+    }
+
+    private String getProductShopName(Element product) {
+        return product.select("div.js_full-product-offer div.product-offer__container")
+                .attr("data-shopurl");
+    }
+
+    private String getProductDirectUrl(Element product) {
+        return urlRoot + product.select("a.go-to-shop").attr("href");
+    }
+
+    private List<String> getProductReviews(Document productPage) {
+        return productPage
+                .select("div.js_product-review>div.user-post__body>div.user-post__content>div.user-post__text")
+                .stream()
+                .map(Element::text)
+                .toList();
+    }
+
+    private String getProductDescription(Document productPage) {
+        return productPage.select("div.product-full-description").text();
+    }
+
+    private String mapNameToUrlQuery(String name) {
+        return urlRoot + "/szukaj-" + name.replace(" ", delimiter);
     }
 }
