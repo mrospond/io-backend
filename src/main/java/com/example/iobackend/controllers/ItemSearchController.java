@@ -36,7 +36,7 @@ public class ItemSearchController {
         return ResponseEntity.ok(itemSearchService.findItems(inquiry, authentication));
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/fileSearch")
     public ResponseEntity<List<ItemScrapingResult>> getItemInquiryFileResults(MultipartFile file,
                                                                          Authentication authentication) {
         List<ItemInquiryDto> queries = itemInquiryImportService.getItemInquiriesFromFile(file);
