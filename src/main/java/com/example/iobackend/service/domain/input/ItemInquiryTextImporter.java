@@ -33,6 +33,9 @@ public class ItemInquiryTextImporter implements ItemInquiryImporter {
             List<ItemInquiryDto> itemInquiries = new ArrayList<>();
             ItemInquiryDto itemInquiry;
             while ((itemInquiry = csvBeanReader.read(ItemInquiryDto.class, nameMapping, cellProcessors)) != null) {
+                if (!itemInquiry.getQuery().matches("^[a-zA-Z0-9\\s]*$")) {
+                    itemInquiry.setValid(false);
+                }
                 itemInquiries.add(itemInquiry);
             }
             return itemInquiries;

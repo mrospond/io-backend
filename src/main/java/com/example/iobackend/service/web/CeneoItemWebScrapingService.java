@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,6 +22,9 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
 
     @Override
     public List<ItemScrapingResult> findItems(ItemInquiryDto query)  {
+        if (!query.isValid()) {
+            return Collections.emptyList();
+        }
         List<ItemScrapingResult> results = new ArrayList<>();
         String mappedUrl = mapNameToUrlQuery(query.getQuery());
         Document document = jsoupConnector.getDocument(mappedUrl);

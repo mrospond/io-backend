@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -31,14 +33,14 @@ public class ItemSearchController {
     private final ItemInquiryImportService itemInquiryImportService;
 
     @PostMapping
-    public ResponseEntity<List<ItemScrapingResult>> getItemInquiryResults(@RequestBody ItemInquiryDto inquiry,
+    public ResponseEntity<List<ItemScrapingResult>> getItemInquiryResults(@RequestBody @Valid ItemInquiryDto inquiry,
                                                                           Authentication authentication) {
         return ResponseEntity.ok(itemSearchService.findItems(inquiry, authentication));
     }
 
     @PostMapping("/file")
-    public ResponseEntity<List<ItemScrapingResult>> getItemInquiryFileResults(MultipartFile file,
-                                                                         Authentication authentication) {
+    public ResponseEntity<Map<String, List<ItemScrapingResult>>> getItemInquiryFileResults(MultipartFile file,
+                                                                             Authentication authentication) {
         List<ItemInquiryDto> queries = itemInquiryImportService.getItemInquiriesFromFile(file);
         return ResponseEntity.ok(itemSearchService.findItems(queries, authentication));
     }

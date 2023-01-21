@@ -23,7 +23,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -42,13 +44,13 @@ public class ItemSearchService {
         return result;
     }
 
-    public List<ItemScrapingResult> findItems(List<ItemInquiryDto> queries, Authentication authentication) {
-        List<ItemScrapingResult> joinedResult = new ArrayList<>();
+    public Map<String, List<ItemScrapingResult>> findItems(List<ItemInquiryDto> queries, Authentication authentication) {
+        Map<String, List<ItemScrapingResult>> result = new HashMap<>();
         for (ItemInquiryDto query : queries) {
             List<ItemScrapingResult> results = this.findItems(query, authentication);
-            joinedResult.addAll(results);
+            result.put(query.getQuery(), results);
         }
-        return joinedResult;
+        return result;
     }
 
     @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
