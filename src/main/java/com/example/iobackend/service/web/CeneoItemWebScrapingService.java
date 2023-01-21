@@ -26,7 +26,8 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
     @Value("${query.delimiter}")
     private String delimiter;
 
-    private List<ItemScrapingResult> extractDataFromCeneo(ItemInquiryDto query)  {
+    @Override
+    public List<ItemScrapingResult> findItems(ItemInquiryDto query)  {
         List<ItemScrapingResult> results = new ArrayList<>();
         String mappedUrl = mapNameToUrlQuery(query.getQuery());
         Document document = jsoupConnector.getDocument(mappedUrl);
@@ -65,9 +66,9 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
 
         return results;
     }
-    @Override
-    public List<ItemScrapingResult> findItems(ItemInquiryDto query) {
-        return extractDataFromCeneo(query);
+
+    private String mapNameToUrlQuery(String name) {
+        return urlRoot + "/szukaj-" + name.replace(" ", delimiter);
     }
 
     private String getImageUrl(Element product) {
@@ -116,9 +117,5 @@ public class CeneoItemWebScrapingService implements ItemWebScrapingService {
 
     private String getProductDescription(Document productPage) {
         return productPage.select("div.product-full-description").text();
-    }
-
-    private String mapNameToUrlQuery(String name) {
-        return urlRoot + "/szukaj-" + name.replace(" ", delimiter);
     }
 }
