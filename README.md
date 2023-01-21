@@ -119,6 +119,13 @@ Na razie zostawiam wyłączone.
   ]
   ```
   
+- `/search/file` <br>
+  <i>Metoda HTTP: POST <br>
+  Login: niewymagany <br></i>
+  
+  Służy do wyszukiwania przedmiotów na podstawie pliku przekazanego jako wartość nagłówka `file` żądania. W odpowiedzi zwraca listę znalezionych przedmiotów. 
+
+  
 - `/search/history` <br>
   <i>Metoda HTTP: GET <br>
   Login: wymagany <br></i>
