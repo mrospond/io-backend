@@ -1,8 +1,9 @@
 package com.example.iobackend.service.domain.export;
 
 import com.example.iobackend.dto.ItemResultDto;
-import com.example.iobackend.service.domain.export.util.FileType;
-import com.example.iobackend.service.domain.export.util.Headers;
+import com.example.iobackend.service.domain.util.ReflectionUtil;
+import com.example.iobackend.service.domain.util.FileType;
+import com.example.iobackend.service.domain.util.Headers;
 import org.springframework.stereotype.Component;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -25,7 +26,7 @@ public class CsvSearchHistoryExporter implements SearchHistoryExporter {
     public void export(List<ItemResultDto> searchHistory, OutputStream output) throws IOException {
         Writer writer = new OutputStreamWriter(output, StandardCharsets.UTF_8);
         CsvBeanWriter csvWriter = new CsvBeanWriter(writer, CsvPreference.STANDARD_PREFERENCE);
-        Headers fieldNamesToHeaderNames = SearchHistoryExporter.getHeaderValues(ItemResultDto.class);
+        Headers fieldNamesToHeaderNames = ReflectionUtil.getHeaderValues(ItemResultDto.class);
 
         String[] csvHeader = fieldNamesToHeaderNames.getHeaderNames();
         String[] nameMapping = fieldNamesToHeaderNames.getFieldNames();

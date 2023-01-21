@@ -42,6 +42,15 @@ public class ItemSearchService {
         return result;
     }
 
+    public List<ItemScrapingResult> findItems(List<ItemInquiryDto> queries, Authentication authentication) {
+        List<ItemScrapingResult> joinedResult = new ArrayList<>();
+        for (ItemInquiryDto query : queries) {
+            List<ItemScrapingResult> results = this.findItems(query, authentication);
+            joinedResult.addAll(results);
+        }
+        return joinedResult;
+    }
+
     @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     public List<ItemResultDto> getSearchHistory(Authentication authentication) {
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {

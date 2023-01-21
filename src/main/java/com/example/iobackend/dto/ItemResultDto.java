@@ -1,8 +1,8 @@
 package com.example.iobackend.dto;
 
-import com.example.iobackend.service.domain.export.annotations.Date;
-import com.example.iobackend.service.domain.export.annotations.Header;
-import com.example.iobackend.service.domain.export.annotations.Url;
+import com.example.iobackend.service.domain.annotations.Date;
+import com.example.iobackend.service.domain.annotations.Header;
+import com.example.iobackend.service.domain.annotations.Url;
 import lombok.Builder;
 import lombok.Data;
 

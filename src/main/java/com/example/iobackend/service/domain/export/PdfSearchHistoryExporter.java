@@ -2,10 +2,11 @@ package com.example.iobackend.service.domain.export;
 
 import com.example.iobackend.dto.ItemResultDto;
 import com.example.iobackend.exceptions.ExportFileException;
-import com.example.iobackend.service.domain.export.annotations.Date;
-import com.example.iobackend.service.domain.export.annotations.Url;
-import com.example.iobackend.service.domain.export.util.FileType;
-import com.example.iobackend.service.domain.export.util.Headers;
+import com.example.iobackend.service.domain.util.ReflectionUtil;
+import com.example.iobackend.service.domain.annotations.Date;
+import com.example.iobackend.service.domain.annotations.Url;
+import com.example.iobackend.service.domain.util.FileType;
+import com.example.iobackend.service.domain.util.Headers;
 import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.io.font.PdfEncodings;
@@ -64,7 +65,7 @@ public class PdfSearchHistoryExporter implements SearchHistoryExporter {
     }
 
     private void createTable(List<ItemResultDto> items, Document document) throws IllegalAccessException, IOException {
-        Headers fieldNamesToHeaderNames = SearchHistoryExporter.getHeaderValues(ItemResultDto.class);
+        Headers fieldNamesToHeaderNames = ReflectionUtil.getHeaderValues(ItemResultDto.class);
 
         String[] pdfHeader = fieldNamesToHeaderNames.getHeaderNames();
         String[] mappedFields = fieldNamesToHeaderNames.getFieldNames();

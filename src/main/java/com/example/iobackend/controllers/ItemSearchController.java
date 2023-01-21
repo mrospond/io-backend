@@ -3,8 +3,9 @@ package com.example.iobackend.controllers;
 import com.example.iobackend.dto.ItemInquiryDto;
 import com.example.iobackend.dto.ItemResultDto;
 import com.example.iobackend.dto.ItemScrapingResult;
+import com.example.iobackend.service.ItemInquiryImportService;
 import com.example.iobackend.service.ItemSearchService;
-import com.example.iobackend.service.domain.export.util.FileType;
+import com.example.iobackend.service.domain.util.FileType;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,11 +28,19 @@ import java.util.List;
 @RequestMapping("/search")
 public class ItemSearchController {
     private final ItemSearchService itemSearchService;
+    private final ItemInquiryImportService itemInquiryImportService;
 
     @PostMapping
     public ResponseEntity<List<ItemScrapingResult>> getItemInquiryResults(@RequestBody ItemInquiryDto inquiry,
                                                                           Authentication authentication) {
         return ResponseEntity.ok(itemSearchService.findItems(inquiry, authentication));
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<List<ItemScrapingResult>> getItemInquiryFileResults(MultipartFile file,
+                                                                         Authentication authentication) {
+        List<ItemInquiryDto> queries = itemInquiryImportService.getItemInquiriesFromFile(file);
+        return ResponseEntity.ok(itemSearchService.findItems(queries, authentication));
     }
 
     @GetMapping("/history")

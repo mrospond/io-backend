@@ -1,11 +1,12 @@
-package com.example.iobackend.service.domain.export.annotations;
+package com.example.iobackend.service.domain.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Url {
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Header {
+    String value() default "{fieldName}";
 }

@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @Component
 public class JsoupConnector {
-    private static final int DEFAULT_TIMEOUT = 3000;
+    private static final int DEFAULT_TIMEOUT = 10000;
 
     public Document getDocument(String url) {
         try {
