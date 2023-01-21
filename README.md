@@ -123,7 +123,7 @@ Na razie zostawiam wyłączone.
   <i>Metoda HTTP: POST <br>
   Login: niewymagany <br></i>
   
-  Służy do wyszukiwania przedmiotów na podstawie pliku. W odpowiedzi zwraca listę znalezionych przedmiotów. 
+  Służy do wyszukiwania przedmiotów na podstawie pliku przekazanego jako wartość nagłówka `file` żądania. W odpowiedzi zwraca listę znalezionych przedmiotów. 
 
   
 - `/search/history` <br>
