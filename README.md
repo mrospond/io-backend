@@ -84,15 +84,11 @@ Na razie zostawiam wyłączone.
   - hasło i login są prawidłowe
   
 - `/search` <br>
-  <i>Metoda HTTP: POST <br>
+  <i>Metoda HTTP: GET <br>
   Login: niewymagany <br></i>
 
   Służy do wyszukiwania przedmiotów na podstawie wprowadzonego tekstu. W odpowiedzi zwraca listę znalezionych przedmiotów. 
-  Przykładowe ciało requesta: 
-  
-  ```json
-  "syrop"
-  ```
+  Przykładowy URL requesta: `localhost:8080/search?query=syrop`
   
   Przykładowa odpowiedź:
   
@@ -119,7 +115,7 @@ Na razie zostawiam wyłączone.
   ]
   ```
   
-- `/search/file` <br>
+- `/search` <br>
   <i>Metoda HTTP: POST <br>
   Login: niewymagany <br></i>
   
