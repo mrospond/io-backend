@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,13 +31,13 @@ public class ItemSearchController {
     private final ItemSearchService itemSearchService;
     private final ItemInquiryImportService itemInquiryImportService;
 
-    @PostMapping
-    public ResponseEntity<List<ItemScrapingResult>> getItemInquiryResults(@RequestBody @Valid ItemInquiryDto inquiry,
+    @GetMapping
+    public ResponseEntity<List<ItemScrapingResult>> getItemInquiryResults(@Valid ItemInquiryDto inquiry,
                                                                           Authentication authentication) {
         return ResponseEntity.ok(itemSearchService.findItems(inquiry, authentication));
     }
 
-    @PostMapping("/file")
+    @PostMapping
     public ResponseEntity<Map<String, List<ItemScrapingResult>>> getItemInquiryFileResults(MultipartFile file,
                                                                              Authentication authentication) {
         List<ItemInquiryDto> queries = itemInquiryImportService.getItemInquiriesFromFile(file);
