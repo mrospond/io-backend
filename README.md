@@ -7,7 +7,7 @@
 3. Skopiuj URL tego repozytorium i umieść w oknie, które się pojawiło. 
 4. `Clone`
 
-Żeby uruchomić aplikację należy przejść do klasy `IoBackendApplication.java` i wywołać metodę main(). Po kilku sekundach aplikacja powinna być dostępna pod adresem `localhost:8080`.
+Żeby uruchomić aplikację należy przejść do klasy `IoBackendApplication.java` i wywołać metodę main(). Po kilku sekundach aplikacja powinna być dostępna pod adresem `0.0.0.0:8080`.
 
 ## Baza danych
 
@@ -88,7 +88,7 @@ Na razie zostawiam wyłączone.
   Login: niewymagany <br></i>
 
   Służy do wyszukiwania przedmiotów na podstawie wprowadzonego tekstu. W odpowiedzi zwraca listę znalezionych przedmiotów. 
-  Przykładowy URL requesta: `localhost:8080/search?query=syrop`
+  Przykładowy URL requesta: `0.0.0.0:8080/search?query=syrop`
   
   Przykładowa odpowiedź:
   
@@ -153,7 +153,7 @@ Na razie zostawiam wyłączone.
   Służy do eksportu historii wyszukiwań zalogowanego użytkownika do wybranego formatu przekazanego jako zmienna url: `extension`. <br>
   Obsługiwane formaty: csv, pdf
   
-  Przykład: `localhost:8080/search/history/export?extension=csv`<br>
+  Przykład: `0.0.0.0:8080/search/history/export?extension=csv`<br>
   Odpowiedź: plik csv zawierający historię wyszukiwania<br>
   
   Można wykonać requesta w przeglądarce po uprzednim zalogowaniu, wtedy automatycznie pobierze się plik.
