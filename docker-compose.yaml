@@ -1,0 +1,28 @@
+version: "3"
+services:
+        backend:
+                build: .
+                container_name: io-backend
+                ports:
+                        - "8080:8080"
+                depends_on:
+                        - database
+                restart: always
+        frontend:
+                build: ./io_project_front-end
+                container_name: io-frontend
+                ports:
+                        - "3000:3000"
+                stdin_open: true
+                tty: true
+                restart: always
+        database:
+                image: postgres
+                container_name: io-database
+                ports:
+                        - "5432:5432"
+                environment:
+                        - POSTGRES_USER=admin
+                        - POSTGRES_PASSWORD=bmeUYnrCjasZp2ej
+                        - POSTGRES_DB=io_database
+                restart: always
