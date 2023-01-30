@@ -26,7 +26,7 @@ mvn clean package
 4. Install docker
 
 ```
-sudo apt install docker.io docker-compose -Y
+sudo apt install docker.io docker-compose -y
 ```
 
 5. Happy hacking!
