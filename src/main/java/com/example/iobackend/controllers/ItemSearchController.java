@@ -9,6 +9,7 @@ import com.example.iobackend.service.domain.util.FileType;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ import java.util.Map;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/search")
+@CrossOrigin
 public class ItemSearchController {
     private final ItemSearchService itemSearchService;
     private final ItemInquiryImportService itemInquiryImportService;

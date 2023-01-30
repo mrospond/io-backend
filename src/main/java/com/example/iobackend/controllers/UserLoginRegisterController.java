@@ -10,6 +10,7 @@ import com.example.iobackend.service.UserLoginRegisterService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin
 public class UserLoginRegisterController {
     private final UserLoginRegisterService userLoginRegisterService;
     private final ApplicationEventPublisher eventPublisher;
