@@ -1,28 +1,33 @@
 version: "3"
 services:
-        backend:
-                build: .
-                container_name: io-backend
-                ports:
-                        - "8080:8080"
-                depends_on:
-                        - database
-                restart: always
-        frontend:
-                build: ./io_project_front-end
-                container_name: io-frontend
-                ports:
-                        - "3000:3000"
-                stdin_open: true
-                tty: true
-                restart: always
-        database:
-                image: postgres
-                container_name: io-database
-                ports:
-                        - "5432:5432"
-                environment:
-                        - POSTGRES_USER=admin
-                        - POSTGRES_PASSWORD=bmeUYnrCjasZp2ej
-                        - POSTGRES_DB=io_database
-                restart: always
+  backend:
+    build: .
+    container_name: io-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    environment:
+      - "SPRING_DATASOURCE_URL=jdbc:postgresql://postgresqldb:5432/io_database"
+      - "SPRING_DATASOURCE_USERNAME=admin"
+      - "SPRING_DATASOURCE_PASSWORD=bmeUYnrCjasZp2ej"
+      - "SPRING_JPA_HIBERNATE_DDL_AUTO_update"
+    restart: always
+  frontend:
+    build: ./io_project_front-end
+    container_name: io-frontend
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    restart: always
+  database:
+    image: postgres
+    container_name: io-database
+    ports:
+      - "5432:5432"
+    environment:
+      - "POSTGRES_USER=admin"
+      - "POSTGRES_PASSWORD=bmeUYnrCjasZp2ej"
+      - "POSTGRES_DB=io_database"
+    restart: always
